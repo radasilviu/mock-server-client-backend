@@ -1,16 +1,15 @@
 package com.fortech.mockapp.controllers;
 
+import com.fortech.mockapp.configuration.model.ResponseMessage;
 import com.fortech.mockapp.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RequiredAuthAppController {
 
     AppService appService;
@@ -21,8 +20,8 @@ public class RequiredAuthAppController {
     }
 
     @GetMapping("/secret")
-    @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<String> returnHiddenText(){
-        return ResponseEntity.status(HttpStatus.OK).body(appService.returnHiddenText());
+    ResponseEntity<ResponseMessage> returnHiddenText(){
+        final ResponseMessage responseMessage = new ResponseMessage("Message from Resource server");
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 }
