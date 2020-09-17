@@ -15,10 +15,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.
-                authorizeRequests()
-                .antMatchers("/user/hello").permitAll()
-                .anyRequest().authenticated()
-                .and()
+                csrf().disable()
                 .addFilterBefore(new AuthorizationServerAccessFilter(), SecurityContextPersistenceFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
