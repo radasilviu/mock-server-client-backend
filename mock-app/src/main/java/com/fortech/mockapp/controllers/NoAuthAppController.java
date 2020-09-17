@@ -22,7 +22,7 @@ public class NoAuthAppController {
 
     @GetMapping("/hello")
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<String> returnHelloWorld(){
-       return ResponseEntity.status(HttpStatus.OK).body(appService.returnHelloWorld());
+    ResponseEntity<String> returnHelloWorld() {
+        return ResponseEntity.status(HttpStatus.OK).body(appService.returnHelloWorld());
     }
 }
