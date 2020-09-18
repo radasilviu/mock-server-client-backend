@@ -30,7 +30,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .cors()
                 .and()
             .csrf().disable()
-            .addFilterBefore(new AuthorizationServerAccessFilter(), SecurityContextPersistenceFilter.class)
+            .addFilterBefore(new AuthorizationServerAccessFilter(env), SecurityContextPersistenceFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

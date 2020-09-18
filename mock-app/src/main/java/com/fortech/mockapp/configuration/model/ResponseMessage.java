@@ -1,10 +1,10 @@
 package com.fortech.mockapp.configuration.model;
 
-import java.io.Serializable;
-
-public class ResponseMessage implements Serializable {
+public class ResponseMessage {
 
     private String content;
+
+    public ResponseMessage() {}
 
     public ResponseMessage(String content) {
         this.content = content;
