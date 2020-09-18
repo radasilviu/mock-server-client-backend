@@ -8,16 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/app")
 public class RequiredAuthAppController {
-
-    AppService appService;
-
+    private AppService appService;
     @Autowired
     public RequiredAuthAppController(AppService appService) {
         this.appService = appService;
     }
-
     @GetMapping("/secret")
     ResponseEntity<ResponseMessage> returnHiddenText(){
         final ResponseMessage responseMessage = new ResponseMessage("Message from Resource server");
