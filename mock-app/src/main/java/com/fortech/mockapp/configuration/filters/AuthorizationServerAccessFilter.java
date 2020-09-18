@@ -1,5 +1,6 @@
 package com.fortech.mockapp.configuration.filters;
 
+import com.fortech.mockapp.configuration.filters.exceptions.AuthorizationHeaderNotFoundException;
 import com.fortech.mockapp.utility.SecurityConstants;
 import org.springframework.core.env.Environment;
 
@@ -27,6 +28,10 @@ public class AuthorizationServerAccessFilter implements Filter {
         String authorizationHeader = httpServletRequest.getHeader(SecurityConstants.HEADER_AUTHORIZATION);
         String method = httpServletRequest.getMethod();
         String authServerRootURL = this.env.getProperty("authServerRootURL");
+
+        if(authorizationHeader == null){
+            throw new AuthorizationHeaderNotFoundException("Authorization Header is null");
+        }
 
         if (!method.equals("OPTIONS") && authorizationHeader != null && !httpServletRequest.getHeader ("origin").equals(authServerRootURL)) {
             URL url = new URL(SecurityConstants.VERIFY_TOKEN_URL);
