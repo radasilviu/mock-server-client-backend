@@ -11,10 +11,10 @@ import java.util.List;
 public interface BookController {
     @GetMapping("/")
     ResponseEntity<List<Book>> getAllBooks();
-    @GetMapping("/{bookId}")
-    ResponseEntity<Book> getBookById(@PathVariable Long bookId);
-    @PostMapping("/{bookId}")
-    ResponseEntity<ResponseMessage> saveBook(@RequestBody Book book, @PathVariable Long bookId);
-    @DeleteMapping("/{bookId}")
-    ResponseEntity<ResponseMessage> deleteBook(@PathVariable Long bookId);
+    @GetMapping("/{bookTitle}")
+    ResponseEntity<Book> getBookByTitle(@PathVariable String bookTitle);
+    @PostMapping("/save")
+    ResponseEntity<ResponseMessage> saveBook(@RequestBody Book book);
+    @DeleteMapping("/{bookTitle}")
+    ResponseEntity<ResponseMessage> deleteBook(@PathVariable String bookTitle);
 }
