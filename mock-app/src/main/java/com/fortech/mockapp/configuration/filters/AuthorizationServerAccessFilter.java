@@ -28,7 +28,7 @@ public class AuthorizationServerAccessFilter implements Filter {
         String method = httpServletRequest.getMethod();
         String authServerRootURL = this.env.getProperty("authServerRootURL");
 
-        if (!method.equals("OPTIONS") && authorizationHeader != null && !httpServletRequest.getHeader ("origin").equals(authServerRootURL)) {
+        if (!method.equals("OPTIONS") && !httpServletRequest.getHeader ("origin").equals(authServerRootURL)) {
             URL url = new URL(SecurityConstants.VERIFY_TOKEN_URL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
@@ -42,8 +42,10 @@ public class AuthorizationServerAccessFilter implements Filter {
             } else {
                 return;
             }
-        } else {
+        } else if (method.equals("OPTIONS")) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
+        } else {
+            return;
         }
     }
 }
