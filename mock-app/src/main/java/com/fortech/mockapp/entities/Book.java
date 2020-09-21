@@ -17,4 +17,15 @@ public class Book {
     private String author;
     private Integer price;
     private String category;
+
+    public Book(String title, String author, String category, int price) {
+        this.title=title;
+        this.author=author;
+        this.category=category;
+        this.price=price;
+    }
+
+    public Book() {
+
+    }
 }
