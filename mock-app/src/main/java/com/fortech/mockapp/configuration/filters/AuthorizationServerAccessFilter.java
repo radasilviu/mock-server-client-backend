@@ -29,11 +29,8 @@ public class AuthorizationServerAccessFilter implements Filter {
         String method = httpServletRequest.getMethod();
         String authServerRootURL = this.env.getProperty("authServerRootURL");
 
-        if(authorizationHeader == null){
-            throw new AuthorizationHeaderNotFoundException("Authorization Header is null");
-        }
 
-        if (!method.equals("OPTIONS") && authorizationHeader != null && !httpServletRequest.getHeader ("origin").equals(authServerRootURL)) {
+        if (!method.equals("OPTIONS") && authorizationHeader != null && !httpServletRequest.getHeader("origin").equals(authServerRootURL)) {
             URL url = new URL(SecurityConstants.VERIFY_TOKEN_URL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
