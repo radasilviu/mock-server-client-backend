@@ -15,8 +15,13 @@ public class BookServiceImpl implements BookService{
     @Autowired
     public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
+        _createTestData();
     }
 
+    private void _createTestData(){
+        bookRepository.save(new Book("Aventurile lui costel", "costel", "adevar", 11));
+        bookRepository.save(new Book("Aventurile lui mirel", "adi", "neadevar", 1100));
+    }
     @Override
     public List<Book> getAllBooks() {
         return (List<Book>) bookRepository.findAll();
