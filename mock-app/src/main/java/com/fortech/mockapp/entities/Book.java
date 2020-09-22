@@ -11,11 +11,15 @@ import javax.persistence.*;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
-    @Column(unique=true)
+    @Column(unique=true, name="title")
     private String title;
+    @Column(name = "author")
     private String author;
+    @Column(name = "price")
     private Integer price;
+    @Column(name = "category")
     private String category;
 
     public Book(String title, String author, String category, int price) {

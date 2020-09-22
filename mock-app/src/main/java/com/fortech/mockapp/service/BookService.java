@@ -1,14 +1,12 @@
 package com.fortech.mockapp.service;
 
+import com.fortech.mockapp.PagedRequest;
 import com.fortech.mockapp.entities.Book;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
+import java.util.Map;
 
 public interface BookService {
-    List<Book> getAllBooks();
-    Book getBookByTitle(String bookTitle);
     void saveBook(Book book);
     void deleteBookByTitle(String bookTitle);
+    Map<String, Object> getBookPagedResponse(PagedRequest requestParams);
 }
