@@ -13,8 +13,12 @@ public class CompanyModel {
     @Column(name = "name")
     private String name;
 
-    public CompanyModel(String name) {
+    @Column(name = "industry")
+    private String industry;
+
+    public CompanyModel(String name, String industry) {
         this.name = name;
+        this.industry = industry;
     }
 
     public CompanyModel() {}
@@ -33,5 +37,13 @@ public class CompanyModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
     }
 }

@@ -1,13 +1,13 @@
 package com.fortech.mockapp.request;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class CompanyListRequest {
     private int limit;
 
     private int offset;
 
-    private List<String> columns;
+    private ArrayList<String> columns;
 
     private String filter;
 
@@ -31,11 +31,11 @@ public class CompanyListRequest {
         this.offset = offset;
     }
 
-    public List<String> getColumns() {
+    public ArrayList<String> getColumns() {
         return columns;
     }
 
-    public void setColumns(List<String> columns) {
+    public void setColumns(ArrayList<String> columns) {
         this.columns = columns;
     }
 

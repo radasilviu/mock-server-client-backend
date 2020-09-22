@@ -8,8 +8,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +35,7 @@ public class CompanyService {
         companyRepository.deleteById(id);
     }
 
-    public Page<CompanyModel> list(CompanyListRequest request) {
+    public Page list(CompanyListRequest request) {
         int pageNumber = request.getOffset() / request.getLimit();
         Sort sort = null;
 
@@ -38,8 +45,34 @@ public class CompanyService {
             sort = Sort.by(request.getSortColumn()).ascending();
         }
 
-        Pageable page = PageRequest.of(pageNumber, request.getLimit(), sort);
-        Page<CompanyModel> companies = companyRepository.findAll(page);
-        return companies;
+        Pageable pageable = PageRequest.of(pageNumber, request.getLimit(), sort);
+        Page page = findByFilter(request.getFilter(), pageable, request.getColumns());
+        return page;
+    }
+
+    public Page findByFilter(String filter, Pageable pageable, ArrayList<String> columns) {
+            Page page = companyRepository.findAll(new Specification<CompanyModel>() {
+            @Override
+            public Predicate toPredicate(Root<CompanyModel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                if (!filter.equals("")) {
+                    for (String column : columns) {
+                        predicates.add(
+                            criteriaBuilder.like(
+                                criteriaBuilder.lower(
+                                        root.get(column).as(String.class)
+                                ), "%" + filter.toLowerCase() + "%"
+                            )
+                        );
+                    }
+                } else {
+                    predicates.add(criteriaBuilder.equal(criteriaBuilder.literal(1), 1));
+                }
+                return criteriaBuilder.or(
+                    predicates.toArray(new Predicate[] {})
+                );
+            }
+        }, pageable);
+        return page;
     }
 }

@@ -26,7 +26,8 @@ public class CompanyData implements ApplicationListener<ApplicationContextEvent>
 
         for (int i = 0; i < size; i++) {
             String name = faker.company().name();
-            companies.add(new CompanyModel(name));
+            String industry = faker.company().industry();
+            companies.add(new CompanyModel(name, industry));
         }
         companyRepository.saveAll(companies);
     }
