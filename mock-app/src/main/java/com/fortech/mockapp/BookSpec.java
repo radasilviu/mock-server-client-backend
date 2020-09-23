@@ -2,11 +2,7 @@ package com.fortech.mockapp;
 
 import com.fortech.mockapp.entities.Book;
 import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +13,6 @@ public class BookSpec {
             for (String fieldName:
                     fieldsToSearchIn) {
                 predicates.add(builder.like(root.get(fieldName), "%"+searchTerm+"%"));
-                System.out.println(fieldName);
-                System.out.println(searchTerm);
             }
             return builder.or(predicates.toArray(new Predicate[] {}));
         };
