@@ -11,10 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,18 +52,23 @@ public class CompanyService {
             @Override
             public Predicate toPredicate(Root<CompanyModel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
+                query.groupBy(root.get("id"));
                 if (!filter.equals("")) {
                     for (String column : columns) {
                         if (column.contains(".")) {
                             String[] relationPath = explodeModelRelations(column);
 
-                            predicates.add(criteriaBuilder.like(
-                                    criteriaBuilder.lower(
-                                            root.get("clients").get("name").as(String.class)
-                                    ), "%" + filter.toLowerCase() + "%"
-                            ));
-
-                            for (String item : relationPath) {
+                            for (int i = 0; i < relationPath.length; i++) {
+                                if (i == relationPath.length - 2) {
+                                    predicates.add(criteriaBuilder.like(
+                                            criteriaBuilder.lower(
+                                                    root.join(relationPath[i]).get(relationPath[i + 1]).as(String.class)
+                                            ), "%" + filter.toLowerCase() + "%"
+                                    ));
+                                    break;
+                                } else {
+                                    root = mapJoins(relationPath[i], root);
+                                }
                             }
                         } else {
                             predicates.add(createLikeCriteria(criteriaBuilder, root, column, filter));
@@ -84,7 +86,7 @@ public class CompanyService {
     }
 
     private String[] explodeModelRelations(String relationPath) {
-        String[] split = relationPath.split(".");
+        String[] split = "clients.name".split("\\.");
         return split;
     }
 
@@ -94,5 +96,10 @@ public class CompanyService {
                     root.get(column).as(String.class)
             ), "%" + filter.toLowerCase() + "%"
         );
+    }
+
+    private Root<CompanyModel> mapJoins(String table, Root<CompanyModel> root) {
+        root.join(table);
+        return root;
     }
 }
