@@ -7,14 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookSpec {
-    public static Specification<Book> hasSeachTermInWantedFields(ArrayList<String> fieldsToSearchIn, String searchTerm) {
+    public static Specification<Book> hasSearchTermInWantedFields(ArrayList<String> fieldsToSearchIn, String searchTerm) {
         return (Specification<Book>) (root, query, builder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            for (String fieldName:
-                    fieldsToSearchIn) {
-                predicates.add(builder.like(root.get(fieldName), "%"+searchTerm+"%"));
+            List<Predicate> conditionList = new ArrayList<>();
+            for (String fieldName: fieldsToSearchIn) {
+                  conditionList.add(builder.like(root.get(fieldName).as(String.class), "%"+searchTerm+"%"));
             }
-            return builder.or(predicates.toArray(new Predicate[] {}));
+            return builder.or(conditionList.toArray(new Predicate[] {}));
         };
     }
 }
