@@ -1,6 +1,10 @@
 package com.fortech.mockapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "companies")
@@ -15,6 +19,10 @@ public class CompanyModel {
 
     @Column(name = "industry")
     private String industry;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy="company")
+    private Set<ClientModel> clients;
 
     public CompanyModel(String name, String industry) {
         this.name = name;
@@ -45,5 +53,13 @@ public class CompanyModel {
 
     public void setIndustry(String industry) {
         this.industry = industry;
+    }
+
+    public Set<ClientModel> getClients() {
+        return clients;
+    }
+
+    public void setClients(Set<ClientModel> clients) {
+        this.clients = clients;
     }
 }

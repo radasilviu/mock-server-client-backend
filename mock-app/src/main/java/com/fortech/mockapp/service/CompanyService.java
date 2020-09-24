@@ -57,13 +57,20 @@ public class CompanyService {
                 List<Predicate> predicates = new ArrayList<>();
                 if (!filter.equals("")) {
                     for (String column : columns) {
-                        predicates.add(
-                            criteriaBuilder.like(
-                                criteriaBuilder.lower(
-                                        root.get(column).as(String.class)
-                                ), "%" + filter.toLowerCase() + "%"
-                            )
-                        );
+                        if (column.contains(".")) {
+                            String[] relationPath = explodeModelRelations(column);
+
+                            predicates.add(criteriaBuilder.like(
+                                    criteriaBuilder.lower(
+                                            root.get("clients").get("name").as(String.class)
+                                    ), "%" + filter.toLowerCase() + "%"
+                            ));
+
+                            for (String item : relationPath) {
+                            }
+                        } else {
+                            predicates.add(createLikeCriteria(criteriaBuilder, root, column, filter));
+                        }
                     }
                 } else {
                     predicates.add(criteriaBuilder.equal(criteriaBuilder.literal(1), 1));
@@ -74,5 +81,18 @@ public class CompanyService {
             }
         }, pageable);
         return page;
+    }
+
+    private String[] explodeModelRelations(String relationPath) {
+        String[] split = relationPath.split(".");
+        return split;
+    }
+
+    private Predicate createLikeCriteria(CriteriaBuilder criteriaBuilder, Root<CompanyModel> root, String column, String filter) {
+        return criteriaBuilder.like(
+            criteriaBuilder.lower(
+                    root.get(column).as(String.class)
+            ), "%" + filter.toLowerCase() + "%"
+        );
     }
 }
