@@ -43,7 +43,7 @@ public class CompanyService {
         }
 
         Pageable pageable = PageRequest.of(pageNumber, request.getLimit(), sort);
-        Page page = findByFilter(request.getFilter(), pageable, request.getColumns());
+        Page page = findByFilter(request.getFilter().trim(), pageable, request.getColumns());
         return page;
     }
 
@@ -52,24 +52,11 @@ public class CompanyService {
             @Override
             public Predicate toPredicate(Root<CompanyModel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                query.groupBy(root.get("id"));
+
                 if (!filter.equals("")) {
                     for (String column : columns) {
                         if (column.contains(".")) {
-                            String[] relationPath = explodeModelRelations(column);
-
-                            for (int i = 0; i < relationPath.length; i++) {
-                                if (i == relationPath.length - 2) {
-                                    predicates.add(criteriaBuilder.like(
-                                            criteriaBuilder.lower(
-                                                    root.join(relationPath[i]).get(relationPath[i + 1]).as(String.class)
-                                            ), "%" + filter.toLowerCase() + "%"
-                                    ));
-                                    break;
-                                } else {
-                                    root = mapJoins(relationPath[i], root);
-                                }
-                            }
+                            predicates.add(createLikeCriteriaForRelationPath(criteriaBuilder, root, column, filter));
                         } else {
                             predicates.add(createLikeCriteria(criteriaBuilder, root, column, filter));
                         }
@@ -77,6 +64,7 @@ public class CompanyService {
                 } else {
                     predicates.add(criteriaBuilder.equal(criteriaBuilder.literal(1), 1));
                 }
+                query.groupBy(root.get("id"));
                 return criteriaBuilder.or(
                     predicates.toArray(new Predicate[] {})
                 );
@@ -86,7 +74,7 @@ public class CompanyService {
     }
 
     private String[] explodeModelRelations(String relationPath) {
-        String[] split = "clients.name".split("\\.");
+        String[] split = relationPath.split("\\.");
         return split;
     }
 
@@ -98,8 +86,13 @@ public class CompanyService {
         );
     }
 
-    private Root<CompanyModel> mapJoins(String table, Root<CompanyModel> root) {
-        root.join(table);
-        return root;
+    private Predicate createLikeCriteriaForRelationPath(CriteriaBuilder criteriaBuilder, Root<CompanyModel> root, String column, String filter) {
+        String[] relationPath = explodeModelRelations(column);
+
+        return criteriaBuilder.like(
+            criteriaBuilder.lower(
+                    root.join(relationPath[0]).get(relationPath[1]).as(String.class)
+            ), "%" + filter.toLowerCase() + "%"
+        );
     }
 }

@@ -1,8 +1,10 @@
 package com.fortech.mockapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "clients")
@@ -13,13 +15,16 @@ public class ClientModel {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
     private String name;
 
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name="company_id", nullable = false)
     private CompanyModel company;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy="client")
+    private Set<AddressModel> addresses;
 
     public ClientModel() {}
 

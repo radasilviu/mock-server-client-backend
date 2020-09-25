@@ -1,7 +1,9 @@
 package com.fortech.mockapp.dummydata;
 
+import com.fortech.mockapp.model.AddressModel;
 import com.fortech.mockapp.model.ClientModel;
 import com.fortech.mockapp.model.CompanyModel;
+import com.fortech.mockapp.repository.AddressRepository;
 import com.fortech.mockapp.repository.ClientRepository;
 import com.fortech.mockapp.repository.CompanyRepository;
 import com.github.javafaker.Faker;
@@ -16,7 +18,7 @@ import java.util.List;
 @Component
 public class CompanyData implements ApplicationListener<ApplicationContextEvent> {
 
-    final int size = 10000;
+    final int size = 1000;
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -24,13 +26,14 @@ public class CompanyData implements ApplicationListener<ApplicationContextEvent>
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private AddressRepository addressRepository;
+
     @Override
     public void onApplicationEvent(ApplicationContextEvent applicationContextEvent) {
         Faker faker = new Faker();
 
         for (int i = 0; i < size; i++) {
-            List<ClientModel> clients = new ArrayList();
-
             String name = faker.company().name();
             String industry = faker.company().industry();
             CompanyModel company = new CompanyModel(name, industry);
@@ -38,10 +41,18 @@ public class CompanyData implements ApplicationListener<ApplicationContextEvent>
 
             for (int j = 0; j < 3; j++) {
                 name = faker.name().fullName();
-                clients.add(new ClientModel(name, company));
-            }
+                ClientModel client = clientRepository.save(new ClientModel(name, company));
 
-            clientRepository.saveAll(clients);
+                List<AddressModel> addresses = new ArrayList();
+
+                for (int k = 0; k < 2; k++) {
+                    String streetName = faker.address().streetName();
+                    String addressNumber = faker.address().streetAddressNumber();
+
+                    addresses.add(new AddressModel(streetName, addressNumber, client));
+                }
+                addressRepository.saveAll(addresses);
+            }
         }
     }
 }
