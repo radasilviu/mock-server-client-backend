@@ -25,18 +25,6 @@ public class BookServiceImpl implements BookService{
     @Autowired
     public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-        _createTestData();
-    }
-
-    private void _createTestData(){
-        bookRepository.save(new Book("Aventurile lui costel", "costel", "adevar", 11));
-        bookRepository.save(new Book("Aventurile lui mirel", "adi", "neadevar", 1100));
-        bookRepository.save(new Book("Aventurile lui abel", "mirel", "neadevar", 1100));
-        bookRepository.save(new Book("Aventurile lui canel", "adi", "mirel", 1100));
-        ArrayList<Book> arr = new ArrayList<Book>();
-        for(int i = 0; i < 200 ; i++)
-            arr.add(new Book("Aventurile lui Gigel"+i, "Gogel", "adv", 1));
-        bookRepository.saveAll(arr);
     }
 
     @Override
