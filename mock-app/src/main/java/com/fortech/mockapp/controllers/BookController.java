@@ -12,8 +12,8 @@ import java.util.Map;
 public interface BookController {
     @PostMapping(path = "/list")
     ResponseEntity<Map<String, Object>> getBookPagedResponse(@RequestBody PagedRequest requestParams);
-    @PutMapping("/update")
-    ResponseEntity<ResponseMessage> updateBook(@RequestBody String bookId, Book book);
-    @DeleteMapping("/{bookTitle}")
+    @PutMapping("/update/{bookId}")
+    ResponseEntity<ResponseMessage> updateBook(@PathVariable String bookId, @RequestBody Book book);
+    @DeleteMapping("/{bookId}")
     ResponseEntity<ResponseMessage> deleteBook(@PathVariable String bookId);
 }

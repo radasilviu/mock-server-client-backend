@@ -15,21 +15,25 @@ import java.util.Map;
 public class BookControllerImpl implements BookController {
 
     private BookService bookService;
+
     @Autowired
     BookControllerImpl(BookServiceImpl bookService){
         this.bookService = bookService;
     }
+
     @Override
     public ResponseEntity<Map<String, Object>> getBookPagedResponse(PagedRequest requestParams) {
         Map<String, Object> responseBody = bookService.getBookPagedResponse(requestParams);
         return ResponseEntity.ok().body(responseBody);
     }
+
     @Override
     public ResponseEntity<ResponseMessage> updateBook(String bookId, Book book) {
         bookService.updateBook(bookId, book);
         final ResponseMessage responseMessage = new ResponseMessage("Book successfully saved");
         return ResponseEntity.ok().body(responseMessage);
     }
+
     @Override
     public ResponseEntity<ResponseMessage> deleteBook(String bookId) {
         bookService.deleteBookById(bookId);
