@@ -1,4 +1,4 @@
-package com.fortech.mockapp;
+package com.fortech.mockapp.configuration.model.specification;
 
 import com.fortech.mockapp.entities.Book;
 import org.springframework.data.jpa.domain.Specification;

@@ -1,6 +1,6 @@
 package com.fortech.mockapp.service;
 
-import com.fortech.mockapp.PagedRequest;
+import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.entities.Book;
 
 import java.util.Map;

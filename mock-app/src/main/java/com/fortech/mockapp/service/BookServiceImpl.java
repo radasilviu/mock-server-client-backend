@@ -1,6 +1,6 @@
 package com.fortech.mockapp.service;
 
-import com.fortech.mockapp.PagedRequest;
+import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.entities.Book;
 import com.fortech.mockapp.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.fortech.mockapp.BookSpec.hasSearchTermInWantedFields;
+import static com.fortech.mockapp.configuration.model.specification.BookSpec.hasSearchTermInWantedFields;
 
 @Service
 public class BookServiceImpl implements BookService{

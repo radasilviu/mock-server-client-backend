@@ -1,6 +1,6 @@
 package com.fortech.mockapp.controllers;
 
-import com.fortech.mockapp.PagedRequest;
+import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.configuration.model.ResponseMessage;
 import com.fortech.mockapp.entities.Book;
 import org.springframework.http.ResponseEntity;

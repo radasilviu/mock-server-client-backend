@@ -1,4 +1,4 @@
-package com.fortech.mockapp;
+package com.fortech.mockapp.configuration.model;
 
 import lombok.Getter;
 import lombok.Setter;
