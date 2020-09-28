@@ -41,12 +41,16 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public void updateBook(String bookId, Book book) {
-
+        Book bookToUpdate = bookRepository.getOne(bookId);
+        bookToUpdate.setAuthor(book.getAuthor());
+        bookToUpdate.setPrice(book.getPrice());
+        bookToUpdate.setTitle(book.getTitle());
+        bookRepository.save(bookToUpdate);
     }
 
     @Override
-    public void deleteBookById(String bookTitle) {
-
+    public void deleteBookById(String bookId) {
+        bookRepository.deleteById(bookId);
     }
 
     @Override
