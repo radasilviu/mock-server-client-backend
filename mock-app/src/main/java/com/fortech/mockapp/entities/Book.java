@@ -2,17 +2,19 @@ package com.fortech.mockapp.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
-public class Book {
+public class Book{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Column(name = "id")
-    private Integer id;
+    private String id;
     @Column(unique=true, name="title")
     private String title;
     @Column(name = "author")
@@ -30,6 +32,5 @@ public class Book {
     }
 
     public Book() {
-
     }
 }
