@@ -6,7 +6,7 @@ import com.fortech.mockapp.entities.Book;
 import java.util.Map;
 
 public interface BookService {
-    void saveBook(Book book);
-    void deleteBookByTitle(String bookTitle);
+    void updateBook(String bookId, Book book);
+    void deleteBookById(String bookId);
     Map<String, Object> getBookPagedResponse(PagedRequest requestParams);
 }

@@ -40,12 +40,12 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public void saveBook(Book book) {
+    public void updateBook(String bookId, Book book) {
 
     }
 
     @Override
-    public void deleteBookByTitle(String bookTitle) {
+    public void deleteBookById(String bookTitle) {
 
     }
 
