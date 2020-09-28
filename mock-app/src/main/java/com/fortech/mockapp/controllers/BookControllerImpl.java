@@ -25,14 +25,14 @@ public class BookControllerImpl implements BookController {
         return ResponseEntity.ok().body(responseBody);
     }
     @Override
-    public ResponseEntity<ResponseMessage> updateBook(Book book) {
-//        bookService.updateBook(book);
+    public ResponseEntity<ResponseMessage> updateBook(String bookId, Book book) {
+        bookService.updateBook(bookId, book);
         final ResponseMessage responseMessage = new ResponseMessage("Book successfully saved");
         return ResponseEntity.ok().body(responseMessage);
     }
     @Override
-    public ResponseEntity<ResponseMessage> deleteBook(String bookTitle) {
-        bookService.deleteBookByTitle(bookTitle);
+    public ResponseEntity<ResponseMessage> deleteBook(String bookId) {
+        bookService.deleteBookById(bookId);
         final ResponseMessage responseMessage = new ResponseMessage("Book successfully deleted");
         return ResponseEntity.ok().body(responseMessage);
     }
