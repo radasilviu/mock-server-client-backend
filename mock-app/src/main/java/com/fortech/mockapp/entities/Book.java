@@ -15,7 +15,8 @@ public class Book{
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
-    @Column(unique=true, name="title")
+//    @Column(unique=true, name="title")
+    @Column(name="title")
     private String title;
     @Column(name = "author")
     private String author;
