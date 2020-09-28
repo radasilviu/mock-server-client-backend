@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.fortech.mockapp.BookSpec.hasSeachTermInWantedFields;
+import static com.fortech.mockapp.BookSpec.hasSearchTermInWantedFields;
 
 @Service
 public class BookServiceImpl implements BookService{
@@ -40,25 +40,29 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    public void saveBook(Book book) {
+
+    }
+
+    @Override
+    public void deleteBookByTitle(String bookTitle) {
+
+    }
+
+    @Override
     public Map<String, Object> getBookPagedResponse(PagedRequest requestParams) {
-
         Pageable paging = getPaging(requestParams);
-        Page<Book> bookPage = getBookPage(requestParams, paging);
 
+        Page<Book> bookPage = getBookPage(requestParams, paging);
         List<Book> bookList = bookPage.getContent();
 
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("books", bookList);
-        responseBody.put("currentPage", bookPage.getNumber());
-        responseBody.put("totalItems", bookPage.getTotalElements());
-
-        return responseBody;
+        return assembleResponseBody(bookPage, bookList);
     }
 
     private Page<Book> getBookPage(PagedRequest requestParams, Pageable paging) {
         String searchTerm = requestParams.getSearchTerm();
         ArrayList<String> columnsToSearchIn = requestParams.getColumnsToSearchIn();
-        return bookRepository.findAll(hasSeachTermInWantedFields(columnsToSearchIn, searchTerm), paging);
+        return bookRepository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), paging);
     }
 
     private Pageable getPaging(PagedRequest requestParams) {
@@ -67,6 +71,14 @@ public class BookServiceImpl implements BookService{
         Integer pageSize = requestParams.getPageSize();
         Pageable paging = PageRequest.of(pageNumber, pageSize, sort);
         return paging;
+    }
+
+    private Map<String, Object> assembleResponseBody(Page<Book> bookPage, List<Book> bookList) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("books", bookList);
+        responseBody.put("currentPage", bookPage.getNumber());
+        responseBody.put("totalItems", bookPage.getTotalElements());
+        return responseBody;
     }
 
     private Sort getSort(PagedRequest requestParams) {
@@ -80,15 +92,5 @@ public class BookServiceImpl implements BookService{
 
     private boolean isAscending(PagedRequest requestParams) {
         return requestParams.getSortDirection() == "asc";
-    }
-
-    @Override
-    public void saveBook(Book book) {
-
-    }
-
-    @Override
-    public void deleteBookByTitle(String bookTitle) {
-
     }
 }

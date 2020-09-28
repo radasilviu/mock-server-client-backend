@@ -7,7 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
+public interface BookRepository extends JpaRepository<Book, String>, JpaSpecificationExecutor<Book> {
       Page<Book> findAll(Specification bookSpecification, Pageable paging);
 }
 

@@ -11,6 +11,7 @@ public class BookSpec {
         return (Specification<Book>) (root, query, builder) -> {
             List<Predicate> conditionList = new ArrayList<>();
             for (String fieldName: fieldsToSearchIn) {
+//                if()
                   conditionList.add(builder.like(root.get(fieldName).as(String.class), "%"+searchTerm+"%"));
             }
             return builder.or(conditionList.toArray(new Predicate[] {}));

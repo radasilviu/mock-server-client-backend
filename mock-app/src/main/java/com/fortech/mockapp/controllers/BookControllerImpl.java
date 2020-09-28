@@ -25,8 +25,8 @@ public class BookControllerImpl implements BookController {
         return ResponseEntity.ok().body(responseBody);
     }
     @Override
-    public ResponseEntity<ResponseMessage> saveBook(Book book) {
-        bookService.saveBook(book);
+    public ResponseEntity<ResponseMessage> updateBook(Book book) {
+//        bookService.updateBook(book);
         final ResponseMessage responseMessage = new ResponseMessage("Book successfully saved");
         return ResponseEntity.ok().body(responseMessage);
     }

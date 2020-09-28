@@ -4,32 +4,29 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-public class Book {
+public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Integer id;
-    @Column(unique=true, name="title")
-    private String title;
-    @Column(name = "author")
-    private String author;
-    @Column(name = "price")
-    private Integer price;
-    @Column(name = "category")
-    private String category;
+    @Column(name="name")
+    private String name;
+    @Column(name="age")
+    private Integer age;
+//    @OneToMany(mappedBy="author")
+//    private Set<Book> books;
 
-    public Book(String title, String author, String category, int price) {
-        this.title=title;
-        this.author=author;
-        this.category=category;
-        this.price=price;
+    public Author(String name, Set<Book> writtenBooks) {
+        this.name=name;
+//        this.books=writtenBooks;
     }
 
-    public Book() {
+    public Author() {
 
     }
 }
