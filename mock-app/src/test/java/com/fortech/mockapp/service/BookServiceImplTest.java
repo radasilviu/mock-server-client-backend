@@ -15,7 +15,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 
-import static com.fortech.mockapp.configuration.model.specification.BookSpec.hasSearchTermInWantedFields;
 import static org.mockito.ArgumentMatchers.any;
 
 
@@ -52,7 +51,7 @@ class BookServiceImplTest {
     void whenDeletingBookById_ShouldCallRepositoryMethod() {
         String bookId = "test";
 
-        bookService.deleteBookById(bookId);
+        bookService.deleteBook(bookId);
 
         Mockito.verify(bookRepository).deleteById(bookId);
     }
