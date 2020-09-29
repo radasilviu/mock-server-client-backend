@@ -15,6 +15,10 @@ public class PagedRequest {
     private String sortColumn;
     private ArrayList<String> columnsToSearchIn;
 
+    public Integer getPageNumber() {
+        return offset / pageSize;
+    }
+
     public PagedRequest(Integer pageSize, Integer offset, String searchTerm, String sortDirection, String sortColumn, ArrayList<String> columnsToSearchIn) {
         this.pageSize = pageSize;
         this.offset = offset;
