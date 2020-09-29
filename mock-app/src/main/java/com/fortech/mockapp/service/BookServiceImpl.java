@@ -51,18 +51,17 @@ public class BookServiceImpl implements BookService{
         return assembleResponseBody(bookPage, bookList);
     }
 
+    private Pageable getPaging(PagedRequest requestParams) {
+        Sort sort = getSort(requestParams);
+        Integer pageNumber = requestParams.getPageNumber();
+        Integer pageSize = requestParams.getPageSize();
+        return PageRequest.of(pageNumber, pageSize, sort);
+    }
+
     private Page<Book> getBookPage(PagedRequest requestParams, Pageable paging) {
         String searchTerm = requestParams.getSearchTerm();
         ArrayList<String> columnsToSearchIn = requestParams.getColumnsToSearchIn();
         return bookRepository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), paging);
-    }
-
-    private Pageable getPaging(PagedRequest requestParams) {
-        Sort sort = getSort(requestParams);
-        Integer pageNumber = requestParams.getOffset() / requestParams.getPageSize();
-        Integer pageSize = requestParams.getPageSize();
-        Pageable paging = PageRequest.of(pageNumber, pageSize, sort);
-        return paging;
     }
 
     private Map<String, Object> assembleResponseBody(Page<Book> bookPage, List<Book> bookList) {
@@ -74,7 +73,10 @@ public class BookServiceImpl implements BookService{
     }
 
     private Sort getSort(PagedRequest requestParams) {
-        Sort sort = Sort.by(requestParams.getSortColumn());
+        String sortColumn = requestParams.getSortColumn();
+        if(sortColumn == "")
+            sortColumn = "title";
+        Sort sort = Sort.by(sortColumn);
         if(isAscending(requestParams))
             sort.ascending();
         else
