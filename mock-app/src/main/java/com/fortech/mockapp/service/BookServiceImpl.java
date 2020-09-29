@@ -48,7 +48,7 @@ public class BookServiceImpl implements BookService{
         Page<Book> bookPage = getBookPage(requestParams, paging);
         List<Book> bookList = bookPage.getContent();
 
-        return assembleResponseBody(bookPage, bookList);
+        return assemblePagedResponse(bookPage, bookList);
     }
 
     private Pageable getPaging(PagedRequest requestParams) {
@@ -64,7 +64,7 @@ public class BookServiceImpl implements BookService{
         return bookRepository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), paging);
     }
 
-    private Map<String, Object> assembleResponseBody(Page<Book> bookPage, List<Book> bookList) {
+    private Map<String, Object> assemblePagedResponse(Page<Book> bookPage, List<Book> bookList) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("books", bookList);
         responseBody.put("currentPage", bookPage.getNumber());
