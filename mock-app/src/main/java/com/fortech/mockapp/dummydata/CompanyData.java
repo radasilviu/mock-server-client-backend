@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class CompanyData implements ApplicationListener<ApplicationContextEvent> {
 
-    final int size = 100000;
+    final int size = 100;
 
     @Autowired
     private CompanyRepository companyRepository;

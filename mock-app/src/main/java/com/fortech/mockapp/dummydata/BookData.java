@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class BookData implements ApplicationListener<ApplicationContextEvent> {
 
-    final int size = 1000;
+    final int size = 100;
 
     @Autowired
     private BookRepository bookRepository;
