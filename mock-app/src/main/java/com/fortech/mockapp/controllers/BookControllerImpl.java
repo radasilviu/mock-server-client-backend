@@ -23,7 +23,7 @@ public class BookControllerImpl implements BookController {
 
     @Override
     public ResponseEntity<Map<String, Object>> getBookPagedResponse(PagedRequest requestParams) {
-        Map<String, Object> responseBody = bookService.getBookPagedResponse(requestParams);
+        Map<String, Object> responseBody = bookService.getPagedResponse(requestParams);
         return ResponseEntity.ok().body(responseBody);
     }
 
