@@ -1,5 +1,7 @@
 package com.fortech.mockapp.service;
 
+import com.fortech.mockapp.Pager;
+import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.model.CompanyModel;
 import com.fortech.mockapp.repository.CompanyRepository;
 import com.fortech.mockapp.request.CompanyListRequest;
@@ -17,6 +19,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,19 +38,9 @@ public class CompanyService {
         companyRepository.deleteById(id);
     }
 
-    public Page list(CompanyListRequest request) {
-        int pageNumber = request.getOffset() / request.getLimit();
-        Sort sort = null;
-
-        if (request.getSortDirection().equals("desc")) {
-            sort = Sort.by(request.getSortColumn()).descending();
-        } else {
-            sort = Sort.by(request.getSortColumn()).ascending();
-        }
-
-        Pageable pageable = PageRequest.of(pageNumber, request.getLimit(), sort);
-        Page page = findByFilter(request.getFilter(), pageable, request.getColumns());
-        return page;
+    public Map<String, Object> list(PagedRequest requestParams) {
+        Pager<CompanyModel> pager = new Pager<>(requestParams, companyRepository);
+        return pager.getPagedResponse();
     }
 
     public Page findByFilter(String filter, Pageable pageable, ArrayList<String> columns) {

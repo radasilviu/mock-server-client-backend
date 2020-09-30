@@ -8,5 +8,5 @@ import java.util.Map;
 public interface BookService {
     void updateBook(String bookId, Book book);
     void deleteBook(String bookId);
-    Map<String, Object> getBookPagedResponse(PagedRequest requestParams);
+    Map<String, Object> getPagedResponse(PagedRequest requestParams);
 }
