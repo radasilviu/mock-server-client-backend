@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.fortech.mockapp.configuration.model.specification.BookSpec.hasSearchTermInWantedFields;
+import static com.fortech.mockapp.configuration.model.specification.SearchSpec.hasSearchTermInWantedFields;
 
 public class Pager<T> {
 
