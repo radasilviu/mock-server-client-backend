@@ -29,14 +29,14 @@ public class Pager<T> {
         return assemblePagedResponse(page, content);
     }
 
-    private Pageable getPaging() {
+    public Pageable getPaging() {
         Sort sort = getSort();
         Integer pageNumber = requestParams.getPageNumber();
         Integer pageSize = requestParams.getPageSize();
         return PageRequest.of(pageNumber, pageSize, sort);
     }
 
-    private Page<T> getPage(Pageable paging) {
+    public Page<T> getPage(Pageable paging) {
         String searchTerm = requestParams.getSearchTerm();
         ArrayList<String> columnsToSearchIn = requestParams.getColumnsToSearchIn();
         return repository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), paging);
