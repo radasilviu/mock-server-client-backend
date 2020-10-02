@@ -14,36 +14,52 @@ import static com.fortech.mockapp.configuration.model.specification.SearchSpec.h
 
 public class Pager<T> {
 
+    private Map<String, Object> pagedResponse;
+    private Pageable paging;
+    private Page page;
     private PagedRequest requestParams;
     private DynamicallySearchableRepository repository;
 
     public Pager(PagedRequest requestParams, DynamicallySearchableRepository repository) {
         this.requestParams = requestParams;
         this.repository = repository;
+        setPagedResponse();
     }
 
     public Map<String, Object> getPagedResponse() {
-        Pageable paging = getPaging();
-        Page<T> page = getPage(paging);
-        List<T> content = page.getContent();
-        return assemblePagedResponse(page, content);
+        return pagedResponse;
     }
 
     public Pageable getPaging() {
+        return paging;
+    }
+
+    public Page<T> getPage() {
+        return page;
+    }
+
+    private void setPagedResponse(){
+        setPaging();
+        setPage();
+        pagedResponse = assemblePagedResponse(page);
+    }
+
+    private void setPaging(){
         Sort sort = getSort();
         Integer pageNumber = requestParams.getPageNumber();
         Integer pageSize = requestParams.getPageSize();
-        return PageRequest.of(pageNumber, pageSize, sort);
+        paging = PageRequest.of(pageNumber, pageSize, sort);
     }
 
-    public Page<T> getPage(Pageable paging) {
+    private void setPage(){
         String searchTerm = requestParams.getSearchTerm();
         ArrayList<String> columnsToSearchIn = requestParams.getColumnsToSearchIn();
-        return repository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), paging);
+        page = repository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), paging);
     }
 
-    private Map<String, Object> assemblePagedResponse(Page<T> page, List<T> content) {
+    private Map<String, Object> assemblePagedResponse(Page<T> page) {
         Map<String, Object> responseBody = new HashMap<>();
+        List<T> content = page.getContent();
         responseBody.put("data", content);
         responseBody.put("currentPage", page.getNumber());
         responseBody.put("totalItems", page.getTotalElements());
