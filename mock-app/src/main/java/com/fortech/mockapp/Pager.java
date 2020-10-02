@@ -30,18 +30,14 @@ public class Pager<T> {
         return pagedResponse;
     }
 
-    public Pageable getPaging() {
-        return paging;
-    }
-
-    public Page<T> getPage() {
-        return page;
-    }
-
     private void setPagedResponse(){
         setPaging();
         setPage();
         pagedResponse = assemblePagedResponse(page);
+    }
+
+    public Pageable getPaging() {
+        return paging;
     }
 
     private void setPaging(){
@@ -49,6 +45,10 @@ public class Pager<T> {
         Integer pageNumber = requestParams.getPageNumber();
         Integer pageSize = requestParams.getPageSize();
         paging = PageRequest.of(pageNumber, pageSize, sort);
+    }
+
+    public Page<T> getPage() {
+        return page;
     }
 
     private void setPage(){
