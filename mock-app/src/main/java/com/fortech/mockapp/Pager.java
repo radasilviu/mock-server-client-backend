@@ -1,10 +1,9 @@
 package com.fortech.mockapp;
 
 import com.fortech.mockapp.configuration.model.PagedRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import com.fortech.mockapp.entities.Book;
+import org.springframework.data.domain.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +23,12 @@ public class Pager<T> {
         this.requestParams = requestParams;
         this.repository = repository;
         setPagedResponse();
+    }
+// creates empty Page, should probably just mock it in tests
+    public Pager(PagedRequest requestParams) {
+        this.requestParams = requestParams;
+        setPaging();
+        setMockPage();
     }
 
     public Map<String, Object> getPagedResponse() {
@@ -68,8 +73,6 @@ public class Pager<T> {
 
     private Sort getSort() {
         String sortColumn = requestParams.getSortColumn();
-//        if(sortColumn == "")
-//            sortColumn = "title";
         Sort sort = Sort.by(sortColumn);
         if(isAscending())
             sort.ascending();
@@ -79,6 +82,13 @@ public class Pager<T> {
     }
 
     private boolean isAscending() {
-        return requestParams.getSortDirection() == "asc";
+        return requestParams.getSortDirection().equals("asc");
+    }
+
+    // Not sure if this belongs in the actual class, or in the set-up of tests
+    private void setMockPage(){
+        ArrayList<Book> bookList = new ArrayList<>();
+        bookList.add(new Book());
+        page = new PageImpl<>(bookList, paging, 100);
     }
 }
