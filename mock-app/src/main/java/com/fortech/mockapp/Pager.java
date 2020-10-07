@@ -2,7 +2,9 @@ package com.fortech.mockapp;
 
 import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.entities.Book;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.Map;
 
 import static com.fortech.mockapp.configuration.model.specification.SearchSpec.hasSearchTermInWantedFields;
 
+@Service
 public class Pager<T> {
 
     private Map<String, Object> pagedResponse;
@@ -19,17 +22,13 @@ public class Pager<T> {
     private PagedRequest requestParams;
     private DynamicallySearchableRepository repository;
 
-    public Pager(PagedRequest requestParams, DynamicallySearchableRepository repository) {
+    public void setRequestParams(PagedRequest requestParams, DynamicallySearchableRepository repository) {
         this.requestParams = requestParams;
         this.repository = repository;
         setPagedResponse();
     }
-// creates empty Page, should probably just mock it in tests
-    public Pager(PagedRequest requestParams) {
-        this.requestParams = requestParams;
-        setPaging();
-        setMockPage();
-    }
+
+    public Pager(){}
 
     public Map<String, Object> getPagedResponse() {
         return pagedResponse;
@@ -86,9 +85,9 @@ public class Pager<T> {
     }
 
     // Not sure if this belongs in the actual class, or in the set-up of tests
-    private void setMockPage(){
-        ArrayList<Book> bookList = new ArrayList<>();
-        bookList.add(new Book());
-        page = new PageImpl<>(bookList, paging, 100);
-    }
+//    private void setMockPage(){
+//        ArrayList<Book> bookList = new ArrayList<>();
+//        bookList.add(new Book());
+//        page = new PageImpl<>(bookList, paging, 100);
+//    }
 }
