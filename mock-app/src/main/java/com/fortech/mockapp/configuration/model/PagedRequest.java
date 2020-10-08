@@ -27,8 +27,5 @@ public class PagedRequest {
         this.sortColumn = sortColumn;
         this.columnsToSearchIn = columnsToSearchIn;
     }
-
-    public PagedRequest() {
-    }
 }
 
