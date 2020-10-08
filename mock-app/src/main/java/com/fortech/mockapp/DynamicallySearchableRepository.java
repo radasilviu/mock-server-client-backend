@@ -1,6 +1,5 @@
 package com.fortech.mockapp;
 
-import com.fortech.mockapp.entities.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
