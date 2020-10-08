@@ -14,10 +14,17 @@ import java.util.Map;
 public class BookServiceImpl implements BookService{
 
     private BookRepository bookRepository;
+    private Pager<Book, String> pager;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, Pager pager) {
         this.bookRepository = bookRepository;
+        this.pager = pager;
+        setPagerRepository();
+    }
+
+    private void setPagerRepository() {
+        this.pager.setRepository(this.bookRepository);
     }
 
     @Override
@@ -39,7 +46,7 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public Map<String, Object> getPagedResponse(PagedRequest requestParams) {
-        Pager<Book> pager = new Pager<>(requestParams, bookRepository);
+        pager.setRequestParams(requestParams);
         return pager.getPagedResponse();
     }
 }

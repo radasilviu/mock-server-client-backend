@@ -4,12 +4,9 @@ import com.fortech.mockapp.Pager;
 import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.model.CompanyModel;
 import com.fortech.mockapp.repository.CompanyRepository;
-import com.fortech.mockapp.request.CompanyListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +22,20 @@ import java.util.Optional;
 @Service
 public class CompanyService {
 
+
+    private CompanyRepository companyRepository;
+    private Pager<CompanyModel, Integer> companyPager;
+
     @Autowired
-    CompanyRepository companyRepository;
+    public CompanyService(CompanyRepository companyRepository, Pager companyPager) {
+        this.companyRepository = companyRepository;
+        this.companyPager = companyPager;
+        setPagerRepository();
+    }
+
+    private void setPagerRepository() {
+        this.companyPager.setRepository(this.companyRepository);
+    }
 
     public CompanyModel update(int id, CompanyModel company) {
         Optional<CompanyModel> temp = companyRepository.findById(id);
@@ -39,8 +48,8 @@ public class CompanyService {
     }
 
     public Map<String, Object> list(PagedRequest requestParams) {
-        Pager<CompanyModel> pager = new Pager<>(requestParams, companyRepository);
-        return pager.getPagedResponse();
+        companyPager.setRequestParams(requestParams);
+        return companyPager.getPagedResponse();
     }
 
     public Page findByFilter(String filter, Pageable pageable, ArrayList<String> columns) {

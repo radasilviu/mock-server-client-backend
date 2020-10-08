@@ -1,8 +1,7 @@
 package com.fortech.mockapp;
 
 import com.fortech.mockapp.configuration.model.PagedRequest;
-import com.fortech.mockapp.entities.Book;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -14,24 +13,35 @@ import java.util.Map;
 import static com.fortech.mockapp.configuration.model.specification.SearchSpec.hasSearchTermInWantedFields;
 
 @Service
-public class Pager<T> {
+@Scope("prototype")
+public class Pager<T, ID> {
 
     private Map<String, Object> pagedResponse;
     private Pageable paging;
-    private Page page;
+    private Page<T> page;
     private PagedRequest requestParams;
-    private DynamicallySearchableRepository repository;
+    private DynamicallySearchableRepository<T, ID> repository;
 
-    public void setRequestParams(PagedRequest requestParams, DynamicallySearchableRepository repository) {
-        this.requestParams = requestParams;
+    public void setRepository(DynamicallySearchableRepository<T, ID> repository) {
         this.repository = repository;
+    }
+
+    public void setRequestParams(PagedRequest requestParams) {
+//        assert repository != null;
+        this.requestParams = requestParams;
         setPagedResponse();
     }
 
-    public Pager(){}
-
     public Map<String, Object> getPagedResponse() {
         return pagedResponse;
+    }
+
+    public Page<T> getPage() {
+        return page;
+    }
+
+    public Pageable getPaging() {
+        return paging;
     }
 
     private void setPagedResponse(){
@@ -40,19 +50,11 @@ public class Pager<T> {
         pagedResponse = assemblePagedResponse(page);
     }
 
-    public Pageable getPaging() {
-        return paging;
-    }
-
     private void setPaging(){
         Sort sort = getSort();
         Integer pageNumber = requestParams.getPageNumber();
         Integer pageSize = requestParams.getPageSize();
         paging = PageRequest.of(pageNumber, pageSize, sort);
-    }
-
-    public Page<T> getPage() {
-        return page;
     }
 
     private void setPage(){
@@ -83,11 +85,4 @@ public class Pager<T> {
     private boolean isAscending() {
         return requestParams.getSortDirection().equals("asc");
     }
-
-    // Not sure if this belongs in the actual class, or in the set-up of tests
-//    private void setMockPage(){
-//        ArrayList<Book> bookList = new ArrayList<>();
-//        bookList.add(new Book());
-//        page = new PageImpl<>(bookList, paging, 100);
-//    }
 }
