@@ -2,9 +2,7 @@ package com.fortech.mockapp;
 
 import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.entities.Book;
-import com.fortech.mockapp.model.CompanyModel;
 import com.fortech.mockapp.repository.BookRepository;
-import com.fortech.mockapp.repository.CompanyRepository;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
@@ -18,11 +16,15 @@ import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 
+// Tests only with Book Objects
 @ExtendWith(MockitoExtension.class)
 class PagerTest {
 
@@ -31,11 +33,8 @@ class PagerTest {
 
     @Mock
     private BookRepository bookRepository;
-    @Mock
-    private CompanyRepository companyRepository;
 
     private Pager<Book, String> bookPager;
-    private Pager<CompanyModel, Integer> companyPager = new Pager<>();
     private PagedRequest requestParams;
 
     @BeforeEach
@@ -94,6 +93,17 @@ class PagerTest {
         Assert.assertEquals(expectedPaging, bookPager.getPagination());
     }
 
+    @Test
+    void getPagedResponse_shouldReturnProperMapObject() {
+        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnEmptyPage());
+        bookPager.setRepository(bookRepository);
+        bookPager.setRequestParams(requestParams);
+
+        Map<String, Object> expected = prepareForJsonFormat(bookPager.getPageWithPagination());
+
+        Assert.assertEquals(expected, bookPager.getPagedResponse());
+    }
+
     private void setUpRequestParams(){
         ArrayList<String> columnsToSearchIn = new ArrayList<>();
         columnsToSearchIn.add("");
@@ -114,5 +124,14 @@ class PagerTest {
         Integer pageSize = requestParams.getPageSize();
         Sort sort = Sort.by("title").ascending();
         return PageRequest.of(pageNumber, pageSize, sort);
+    }
+
+    private Map<String, Object> prepareForJsonFormat(Page<Book> page) {
+        Map<String, Object> responseBody = new HashMap<>();
+        List<Book> content = page.getContent();
+        responseBody.put("data", content);
+        responseBody.put("currentPage", page.getNumber());
+        responseBody.put("totalItems", page.getTotalElements());
+        return responseBody;
     }
 }
