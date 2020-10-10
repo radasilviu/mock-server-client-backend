@@ -12,13 +12,13 @@ import java.util.Map;
 
 import static com.fortech.mockapp.configuration.model.specification.SearchSpec.hasSearchTermInWantedFields;
 
+
+// you can create this method without setting a repository - which kinda sucks,
+// but is hard to avoid if we want Spring to manage this component
+// - we could change getPage method to take the repository as a parameter, but that sounds meh
 @Service
 @Scope("prototype")
 public class Pager<T, ID> {
-
-    private Map<String, Object> pagedResponse;
-    private Pageable paging;
-    private Page<T> page;
     private PagedRequest requestParams;
     private DynamicallySearchableRepository<T, ID> repository;
 
@@ -27,43 +27,35 @@ public class Pager<T, ID> {
     }
 
     public void setRequestParams(PagedRequest requestParams) {
-//        assert repository != null;
         this.requestParams = requestParams;
-        setPagedResponse();
     }
 
     public Map<String, Object> getPagedResponse() {
-        return pagedResponse;
+        Page<T> formattedPage = getPageWithPagination();
+        return prepareForJsonFormat(formattedPage);
     }
 
-    public Page<T> getPage() {
-        return page;
+    public Page<T> getPageWithPagination() throws NoRepositorySetException{
+        if(repository == null)
+            throw new NoRepositorySetException("No repository was set, please make sure to call setter method on Pager instance");
+        Pageable pagination = getPagination();
+        return retrievePage(pagination);
     }
 
-    public Pageable getPaging() {
-        return paging;
-    }
-
-    private void setPagedResponse(){
-        setPaging();
-        setPage();
-        pagedResponse = assemblePagedResponse(page);
-    }
-
-    private void setPaging(){
+    public Pageable getPagination() {
         Sort sort = getSort();
         Integer pageNumber = requestParams.getPageNumber();
         Integer pageSize = requestParams.getPageSize();
-        paging = PageRequest.of(pageNumber, pageSize, sort);
+        return PageRequest.of(pageNumber, pageSize, sort);
     }
 
-    private void setPage(){
+    private Page<T> retrievePage(Pageable pagination){
         String searchTerm = requestParams.getSearchTerm();
         ArrayList<String> columnsToSearchIn = requestParams.getColumnsToSearchIn();
-        page = repository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), paging);
+        return repository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), pagination);
     }
 
-    private Map<String, Object> assemblePagedResponse(Page<T> page) {
+    private Map<String, Object> prepareForJsonFormat(Page<T> page) {
         Map<String, Object> responseBody = new HashMap<>();
         List<T> content = page.getContent();
         responseBody.put("data", content);
