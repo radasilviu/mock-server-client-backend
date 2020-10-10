@@ -1,4 +1,4 @@
-package com.fortech.mockapp;
+package com.fortech.mockapp.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

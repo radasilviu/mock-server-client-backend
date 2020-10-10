@@ -1,5 +1,6 @@
-package com.fortech.mockapp;
+package com.fortech.mockapp.utility.Exceptions;
 
+import com.fortech.mockapp.utility.Exceptions.DataLayerException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

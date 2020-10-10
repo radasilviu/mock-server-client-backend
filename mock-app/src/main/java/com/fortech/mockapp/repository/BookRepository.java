@@ -1,6 +1,5 @@
 package com.fortech.mockapp.repository;
 
-import com.fortech.mockapp.DynamicallySearchableRepository;
 import com.fortech.mockapp.entities.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

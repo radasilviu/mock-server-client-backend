@@ -1,6 +1,5 @@
 package com.fortech.mockapp.service;
 
-import com.fortech.mockapp.Pager;
 import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.model.CompanyModel;
 import com.fortech.mockapp.repository.CompanyRepository;

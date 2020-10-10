@@ -1,6 +1,8 @@
-package com.fortech.mockapp;
+package com.fortech.mockapp.service;
 
 import com.fortech.mockapp.configuration.model.PagedRequest;
+import com.fortech.mockapp.repository.DynamicallySearchableRepository;
+import com.fortech.mockapp.utility.Exceptions.NoRepositorySetException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,7 @@ public class Pager<T, ID> {
         return prepareForJsonFormat(formattedPage);
     }
 
-    public Page<T> getPageWithPagination() throws NoRepositorySetException{
+    public Page<T> getPageWithPagination() throws NoRepositorySetException {
         if(repository == null)
             throw new NoRepositorySetException("No repository was set, please make sure to call setter method on Pager instance");
         Pageable pagination = getPagination();

@@ -1,7 +1,6 @@
 package com.fortech.mockapp.service;
 
-import com.fortech.mockapp.DataLayerException;
-import com.fortech.mockapp.Pager;
+import com.fortech.mockapp.utility.Exceptions.DataLayerException;
 import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.entities.Book;
 import com.fortech.mockapp.repository.BookRepository;
@@ -25,7 +24,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.reset;
 
 
 @ExtendWith(MockitoExtension.class)

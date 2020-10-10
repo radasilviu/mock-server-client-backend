@@ -3,6 +3,8 @@ package com.fortech.mockapp;
 import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.entities.Book;
 import com.fortech.mockapp.repository.BookRepository;
+import com.fortech.mockapp.service.Pager;
+import com.fortech.mockapp.utility.Exceptions.NoRepositorySetException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;

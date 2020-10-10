@@ -1,4 +1,4 @@
-package com.fortech.mockapp;
+package com.fortech.mockapp.utility.Exceptions;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.fortech.mockapp;
+package com.fortech.mockapp.utility.Exceptions;
 
 public class NoRepositorySetException extends RuntimeException{
     private String message;
