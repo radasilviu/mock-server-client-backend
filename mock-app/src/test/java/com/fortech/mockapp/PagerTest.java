@@ -1,7 +1,6 @@
 package com.fortech.mockapp;
 
 import com.fortech.mockapp.configuration.model.PagedRequest;
-import com.fortech.mockapp.configuration.model.specification.SearchSpec;
 import com.fortech.mockapp.entities.Book;
 import com.fortech.mockapp.model.CompanyModel;
 import com.fortech.mockapp.repository.BookRepository;
