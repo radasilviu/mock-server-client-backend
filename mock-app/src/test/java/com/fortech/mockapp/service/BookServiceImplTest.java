@@ -6,24 +6,24 @@ import com.fortech.mockapp.configuration.model.PagedRequest;
 import com.fortech.mockapp.entities.Book;
 import com.fortech.mockapp.repository.BookRepository;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 
@@ -31,21 +31,37 @@ import static org.mockito.Mockito.reset;
 @ExtendWith(MockitoExtension.class)
 class BookServiceImplTest {
 
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
     @Mock
     private BookRepository bookRepository;
 
+    @Mock
+    private Pager<Book, String> mockPager;
+
+    private Pager<Book, String> realPager = new Pager<>();
     private PagedRequest requestParams;
 
     @InjectMocks
-    private final BookService bookService = new BookServiceImpl(bookRepository);
+    private BookServiceImpl bookService;
 
     @BeforeEach
     public void setUp(){
-        reset(bookRepository);
+        setUpRequestParams();
+
+//        BookService bookService = new BookServiceImpl(bookRepository, mockPager);
     }
 
-    @BeforeEach
-    public void setUpRequestParams(){
+//    @AfterEach
+//    public void resetAll(){
+//        reset(mockPager);
+//        reset(bookRepository);
+//    }
+
+    private void setUpRequestParams(){
+        if(requestParams!=null)
+            return;
         ArrayList<String> columnsToSearchIn = new ArrayList<>();
         columnsToSearchIn.add("");
         requestParams = new PagedRequest(
@@ -96,13 +112,17 @@ class BookServiceImplTest {
     }
 
     @Test
-    void whenGettingBookPagedResponse_ShouldCallProperRepositoryFindAllMethod() {
-        Pager<Book> testPager = new Pager<>(requestParams);
+    void whenCreatingInstance_ShouldSetPagerRepository(){
+        Mockito.verify(mockPager).setRepository(any());
+    }
 
-        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(testPager.getPage());
+    @Test
+    void whenGettingBookPagedResponse_ShouldCallProperPagerMethod() {
+        Map<String, Object> ret = new HashMap<>();
+        Mockito.when(mockPager.getPagedResponse()).thenReturn(ret);
 
         bookService.getPagedResponse(requestParams);
 
-        Mockito.verify(bookRepository).findAll((Specification) any(), (Pageable) any());
+        Mockito.verify(mockPager).getPagedResponse();
     }
 }
