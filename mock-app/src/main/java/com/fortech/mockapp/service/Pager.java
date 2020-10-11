@@ -41,7 +41,7 @@ public class Pager<T, ID> {
         if(repository == null)
             throw new NoRepositorySetException("No repository was set, please make sure to call setter method on Pager instance");
         Pageable pagination = getPagination();
-        return retrievePage(pagination);
+        return getPage(pagination);
     }
 
     public Pageable getPagination() {
@@ -51,7 +51,7 @@ public class Pager<T, ID> {
         return PageRequest.of(pageNumber, pageSize, sort);
     }
 
-    private Page<T> retrievePage(Pageable pagination){
+    private Page<T> getPage(Pageable pagination){
         String searchTerm = requestParams.getSearchTerm();
         ArrayList<String> columnsToSearchIn = requestParams.getColumnsToSearchIn();
         return repository.findAll(hasSearchTermInWantedFields(columnsToSearchIn, searchTerm), pagination);
