@@ -116,6 +116,19 @@ class PagerTest {
         Assert.assertEquals(expected.get("data").toString(), actual.get("data").toString());
     }
 
+    @Test
+    void getPagedResponse_shouldReturnProperMapObject_Unsorted() {
+        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnReversedDemoBookPage());
+        bookPager.setRepository(bookRepository);
+        requestParams.setSortDirection("");
+        bookPager.setRequestParams(requestParams);
+
+        Map<String, Object> expected = returnPreparedForJsonFormat(returnReversedDemoBookPage());
+        Map<String, Object> actual = bookPager.getPagedResponse();
+
+        Assert.assertEquals(expected.get("data").toString(), actual.get("data").toString());
+    }
+
     private void setUpRequestParams(String sortDirection){
         ArrayList<String> columnsToSearchIn = new ArrayList<>();
         columnsToSearchIn.add("");
