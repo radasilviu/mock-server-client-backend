@@ -1,9 +1,7 @@
 package com.fortech.mockapp.dummydata;
 
 import com.fortech.mockapp.entities.Book;
-import com.fortech.mockapp.model.CompanyModel;
 import com.fortech.mockapp.repository.BookRepository;
-import com.fortech.mockapp.repository.CompanyRepository;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

@@ -1,6 +1,6 @@
 package com.fortech.mockapp.response;
 
-import com.fortech.mockapp.model.CompanyModel;
+import com.fortech.mockapp.entities.CompanyModel;
 
 import java.util.List;
 

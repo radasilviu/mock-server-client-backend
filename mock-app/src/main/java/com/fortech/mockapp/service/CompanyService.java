@@ -1,7 +1,7 @@
 package com.fortech.mockapp.service;
 
 import com.fortech.mockapp.configuration.model.PagedRequest;
-import com.fortech.mockapp.model.CompanyModel;
+import com.fortech.mockapp.entities.CompanyModel;
 import com.fortech.mockapp.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

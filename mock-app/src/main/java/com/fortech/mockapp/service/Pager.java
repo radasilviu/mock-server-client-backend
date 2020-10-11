@@ -68,15 +68,13 @@ public class Pager<T, ID> {
 
     private Sort getSort() {
         String sortColumn = requestParams.getSortColumn();
-        Sort sort = Sort.by(sortColumn);
+        Sort sort;
         if(isAscending())
-            sort.ascending();
+            sort = Sort.by(sortColumn).ascending();
         else
-            sort.descending();
+            sort = Sort.by(sortColumn).descending();
         return sort;
     }
 
-    private boolean isAscending() {
-        return requestParams.getSortDirection().equals("asc");
-    }
+    private boolean isAscending() { return requestParams.getSortDirection().equals("asc"); }
 }

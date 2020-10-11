@@ -1,14 +1,11 @@
 package com.fortech.mockapp.controllers;
 
 import com.fortech.mockapp.configuration.model.PagedRequest;
-import com.fortech.mockapp.model.CompanyModel;
+import com.fortech.mockapp.entities.CompanyModel;
 import com.fortech.mockapp.repository.CompanyRepository;
-import com.fortech.mockapp.request.CompanyListRequest;
-import com.fortech.mockapp.response.CompanyListResponse;
 import com.fortech.mockapp.response.GeneralResponse;
 import com.fortech.mockapp.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +24,6 @@ public class CompanyController {
     @PostMapping(path="/list")
     public @ResponseBody
     ResponseEntity<Map<String, Object>> getAllCompanies(@RequestBody PagedRequest requestParams) {
-        //Page<CompanyModel> companies = companyService.list(request);
-        //CompanyListResponse response = new CompanyListResponse(companies.getTotalElements(), companies.getContent());
         Map<String, Object> responseBody = companyService.list(requestParams);
         return ResponseEntity.ok().body(responseBody);
     }

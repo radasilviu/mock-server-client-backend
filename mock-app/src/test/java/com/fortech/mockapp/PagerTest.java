@@ -18,10 +18,8 @@ import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
@@ -42,14 +40,14 @@ class PagerTest {
     @BeforeEach
     void setup(){
         bookPager = new Pager<>();
-        setUpRequestParams();
+        setUpRequestParams("asc");
         bookPager.setRequestParams(requestParams);
     }
 
     @AfterEach
     void resetAll(){
         reset(bookRepository);
-        setUpRequestParams();
+        setUpRequestParams("asc");
         bookPager.setRequestParams(requestParams);
         requestParams = null;
     }
@@ -75,7 +73,6 @@ class PagerTest {
 
     @Test
     void getPage_ShouldCallRepositoryMethod() {
-        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnEmptyPage());
         bookPager.setRepository(bookRepository);
 
         bookPager.getPageWithPagination();
@@ -85,7 +82,6 @@ class PagerTest {
 
     @Test
     void getPagedResponse_ShouldCallRepositoryMethodWithProperParameters() {
-        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnEmptyPage());
         bookPager.setRepository(bookRepository);
         Pageable expectedPaging = returnPaging();
 
@@ -97,40 +93,69 @@ class PagerTest {
 
     @Test
     void getPagedResponse_shouldReturnProperMapObject() {
-        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnEmptyPage());
+        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnDemoBookPage());
         bookPager.setRepository(bookRepository);
         bookPager.setRequestParams(requestParams);
 
-        Map<String, Object> expected = prepareForJsonFormat(bookPager.getPageWithPagination());
+        Map<String, Object> expected = returnPreparedForJsonFormat(returnDemoBookPage());
+        Map<String, Object> actual = bookPager.getPagedResponse();
 
-        Assert.assertEquals(expected, bookPager.getPagedResponse());
+        Assert.assertEquals(expected.get("data").toString(), actual.get("data").toString());
     }
 
-    private void setUpRequestParams(){
+    @Test
+    void getPagedResponse_shouldReturnProperMapObject_Descending() {
+        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnReversedDemoBookPage());
+        bookPager.setRepository(bookRepository);
+        requestParams.setSortDirection("desc");
+        bookPager.setRequestParams(requestParams);
+
+        Map<String, Object> expected = returnPreparedForJsonFormat(returnReversedDemoBookPage());
+        Map<String, Object> actual = bookPager.getPagedResponse();
+
+        Assert.assertEquals(expected.get("data").toString(), actual.get("data").toString());
+    }
+
+    private void setUpRequestParams(String sortDirection){
         ArrayList<String> columnsToSearchIn = new ArrayList<>();
         columnsToSearchIn.add("");
         requestParams = new PagedRequest(
-                10, 0, "", "asc", "title", columnsToSearchIn
+                10, 0, "", sortDirection, "title", columnsToSearchIn
         );
     }
 
-    private Page returnEmptyPage(){
-        ArrayList<Book> bookList = new ArrayList<>();
-        bookList.add(new Book());
-        return new PageImpl<>(bookList, returnPaging(), 100);
+    private Page<Book> returnDemoBookPage(){
+        ArrayList<Book> bookList = returnDemoBooks();
+        return new PageImpl<>(bookList, returnPaging(), 4);
+    }
+
+    private Page<Book> returnReversedDemoBookPage(){
+        ArrayList<Book> bookList = returnDemoBooks();
+        Collections.reverse(bookList);
+        return new PageImpl<>(bookList, returnPaging(), 4);
+    }
+
+    private ArrayList<Book> returnDemoBooks() {
+        return new ArrayList<>(Arrays.asList(
+                new Book("aaa", "demo1", "mock2", 1337),
+                new Book("bbb", "demo1", "mock2", 1337),
+                new Book("ccc", "demo1", "mock2", 1337),
+                new Book("ddd", "demo1", "mock2", 1337)
+        ));
     }
 
     private Pageable returnPaging(){
-        setUpRequestParams();
+        setUpRequestParams("asc");
         Integer pageNumber = requestParams.getPageNumber();
         Integer pageSize = requestParams.getPageSize();
         Sort sort = Sort.by("title").ascending();
         return PageRequest.of(pageNumber, pageSize, sort);
     }
 
-    private Map<String, Object> prepareForJsonFormat(Page<Book> page) {
+    private Map<String, Object> returnPreparedForJsonFormat(Page<Book> page) {
         Map<String, Object> responseBody = new HashMap<>();
         List<Book> content = page.getContent();
+        System.out.println("Content: "+ content);
         responseBody.put("data", content);
         responseBody.put("currentPage", page.getNumber());
         responseBody.put("totalItems", page.getTotalElements());

@@ -1,6 +1,6 @@
 package com.fortech.mockapp.repository;
 
-import com.fortech.mockapp.model.CompanyModel;
+import com.fortech.mockapp.entities.CompanyModel;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
