@@ -168,7 +168,6 @@ class PagerTest {
     private Map<String, Object> returnPreparedForJsonFormat(Page<Book> page) {
         Map<String, Object> responseBody = new HashMap<>();
         List<Book> content = page.getContent();
-        System.out.println("Content: "+ content);
         responseBody.put("data", content);
         responseBody.put("currentPage", page.getNumber());
         responseBody.put("totalItems", page.getTotalElements());
