@@ -47,15 +47,7 @@ class BookServiceImplTest {
     @BeforeEach
     public void setUp(){
         setUpRequestParams();
-
-//        BookService bookService = new BookServiceImpl(bookRepository, mockPager);
     }
-
-//    @AfterEach
-//    public void resetAll(){
-//        reset(mockPager);
-//        reset(bookRepository);
-//    }
 
     private void setUpRequestParams(){
         if(requestParams!=null)
@@ -67,9 +59,6 @@ class BookServiceImplTest {
         );
     }
 
-    // Book entity has a public Id setter (which is stupid),
-    // but how could we check the ID stays the same if we set it private (thus forcing it to be null)?
-    // - Not that we'd really need to
     @Test
     void whenUpdatingBookShouldFetchBookWithMatchingIdFromRepositoryAndUpdateItAndSaveIt() {
         String bookId = "test";

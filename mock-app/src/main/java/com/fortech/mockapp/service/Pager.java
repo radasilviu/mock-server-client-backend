@@ -14,10 +14,6 @@ import java.util.Map;
 
 import static com.fortech.mockapp.configuration.model.specification.SearchSpec.hasSearchTermInWantedFields;
 
-
-// you can create this method without setting a repository - which kinda sucks,
-// but is hard to avoid if we want Spring to manage this component
-// - we could change getPage method to take the repository as a parameter, but that sounds meh
 @Service
 @Scope("prototype")
 public class Pager<T, ID> {
