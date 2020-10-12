@@ -9,13 +9,12 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-public class Book{
+public class Book {
     @Id
     @GeneratedValue(generator="system-uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Column(name = "id")
-    private String id;
-//    @Column(unique=true, name="title")
+    protected String id;
     @Column(name="title")
     private String title;
     @Column(name = "author")
@@ -30,6 +29,17 @@ public class Book{
         this.author=author;
         this.category=category;
         this.price=price;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                '}';
     }
 
     public Book() {

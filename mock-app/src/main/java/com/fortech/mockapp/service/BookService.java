@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface BookService {
     void updateBook(String bookId, Book book);
-    void deleteBookById(String bookId);
-    Map<String, Object> getBookPagedResponse(PagedRequest requestParams);
+    void deleteBook(String bookId);
+    Map<String, Object> getPagedResponse(PagedRequest requestParams);
 }

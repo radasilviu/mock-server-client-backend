@@ -27,11 +27,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-            .cors()
+                .cors()
                 .and()
-            .csrf().disable()
-            .addFilterBefore(new AuthorizationServerAccessFilter(env), SecurityContextPersistenceFilter.class)
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .csrf().disable()
+                .addFilterBefore(new AuthorizationServerAccessFilter(env), SecurityContextPersistenceFilter.class)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Bean

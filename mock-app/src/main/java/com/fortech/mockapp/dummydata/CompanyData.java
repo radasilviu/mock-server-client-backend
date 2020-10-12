@@ -1,6 +1,6 @@
 package com.fortech.mockapp.dummydata;
 
-import com.fortech.mockapp.model.CompanyModel;
+import com.fortech.mockapp.entities.CompanyModel;
 import com.fortech.mockapp.repository.CompanyRepository;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class CompanyData implements ApplicationListener<ApplicationContextEvent> {
 
-    final int size = 100000;
+    final int size = 100;
 
     @Autowired
     private CompanyRepository companyRepository;

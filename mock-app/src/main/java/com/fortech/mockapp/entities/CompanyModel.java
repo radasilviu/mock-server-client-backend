@@ -1,4 +1,4 @@
-package com.fortech.mockapp.model;
+package com.fortech.mockapp.entities;
 
 import javax.persistence.*;
 

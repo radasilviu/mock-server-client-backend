@@ -1,13 +1,11 @@
 package com.fortech.mockapp.service;
 
-import com.fortech.mockapp.model.CompanyModel;
+import com.fortech.mockapp.configuration.model.PagedRequest;
+import com.fortech.mockapp.entities.CompanyModel;
 import com.fortech.mockapp.repository.CompanyRepository;
-import com.fortech.mockapp.request.CompanyListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +15,26 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class CompanyService {
 
+
+    private CompanyRepository companyRepository;
+    private Pager<CompanyModel, Integer> companyPager;
+
     @Autowired
-    CompanyRepository companyRepository;
+    public CompanyService(CompanyRepository companyRepository, Pager companyPager) {
+        this.companyRepository = companyRepository;
+        this.companyPager = companyPager;
+        setPagerRepository();
+    }
+
+    private void setPagerRepository() {
+        this.companyPager.setRepository(this.companyRepository);
+    }
 
     public CompanyModel update(int id, CompanyModel company) {
         Optional<CompanyModel> temp = companyRepository.findById(id);
@@ -35,19 +46,9 @@ public class CompanyService {
         companyRepository.deleteById(id);
     }
 
-    public Page list(CompanyListRequest request) {
-        int pageNumber = request.getOffset() / request.getLimit();
-        Sort sort = null;
-
-        if (request.getSortDirection().equals("desc")) {
-            sort = Sort.by(request.getSortColumn()).descending();
-        } else {
-            sort = Sort.by(request.getSortColumn()).ascending();
-        }
-
-        Pageable pageable = PageRequest.of(pageNumber, request.getLimit(), sort);
-        Page page = findByFilter(request.getFilter(), pageable, request.getColumns());
-        return page;
+    public Map<String, Object> list(PagedRequest requestParams) {
+        companyPager.setRequestParams(requestParams);
+        return companyPager.getPagedResponse();
     }
 
     public Page findByFilter(String filter, Pageable pageable, ArrayList<String> columns) {
