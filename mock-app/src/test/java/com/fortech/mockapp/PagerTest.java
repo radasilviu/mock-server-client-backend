@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 
@@ -47,21 +48,38 @@ class PagerTest {
     @AfterEach
     void resetAll(){
         reset(bookRepository);
-        setUpRequestParams("asc");
-        bookPager.setRequestParams(requestParams);
         requestParams = null;
     }
 
     @Test
     void getPagination_ShouldProperlySetPagination(){
         Pageable actual = bookPager.getPagination();
-        Pageable expected = returnPaging();
 
-        Assert.assertEquals(expected.getPageNumber(), actual.getPageNumber());
-        Assert.assertEquals(expected.getSort(), actual.getSort());
-        Assert.assertEquals(expected.getOffset(), actual.getOffset());
+        Assert.assertEquals((int)requestParams.getPageNumber(), actual.getPageNumber());
+        Assert.assertEquals(requestParams.getSortDirection(), (actual.getSort().getOrderFor(requestParams.getSortColumn()).getDirection()).toString().toLowerCase());
+        Assert.assertNotNull(actual.getSort().getOrderFor("title"));
+        Assert.assertEquals((int)requestParams.getOffset(), actual.getOffset());
+    }
 
-        Assert.assertEquals(expected, actual);
+    @Test
+    void getPagination_ShouldProperlySetPagination_Desc(){
+        requestParams.setSortDirection("desc");
+        Pageable actual = bookPager.getPagination();
+
+        Assert.assertEquals((int)requestParams.getPageNumber(), actual.getPageNumber());
+        Assert.assertEquals(requestParams.getSortDirection(), (actual.getSort().getOrderFor(requestParams.getSortColumn()).getDirection()).toString().toLowerCase());
+        Assert.assertNotNull(actual.getSort().getOrderFor("title"));
+        Assert.assertEquals((int)requestParams.getOffset(), actual.getOffset());
+    }
+
+    @Test
+    void getPagination_ShouldProperlySetPagination_Unsorted(){
+        requestParams.setSortDirection("");
+        Pageable actual = bookPager.getPagination();
+
+        Assert.assertEquals((int)requestParams.getPageNumber(), actual.getPageNumber());
+        Assert.assertNull(actual.getSort().getOrderFor("title"));
+        Assert.assertEquals((int)requestParams.getOffset(), actual.getOffset());
     }
 
     @Test
@@ -103,35 +121,10 @@ class PagerTest {
         Assert.assertEquals(expected.get("data").toString(), actual.get("data").toString());
     }
 
-    @Test
-    void getPagedResponse_shouldReturnProperMapObject_Descending() {
-        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnReversedDemoBookPage());
-        bookPager.setRepository(bookRepository);
-        requestParams.setSortDirection("desc");
-        bookPager.setRequestParams(requestParams);
-
-        Map<String, Object> expected = returnPreparedForJsonFormat(returnReversedDemoBookPage());
-        Map<String, Object> actual = bookPager.getPagedResponse();
-
-        Assert.assertEquals(expected.get("data").toString(), actual.get("data").toString());
-    }
-
-    @Test
-    void getPagedResponse_shouldReturnProperMapObject_Unsorted() {
-        Mockito.when(bookRepository.findAll((Specification) any(), (Pageable) any())).thenReturn(returnReversedDemoBookPage());
-        bookPager.setRepository(bookRepository);
-        requestParams.setSortDirection("");
-        bookPager.setRequestParams(requestParams);
-
-        Map<String, Object> expected = returnPreparedForJsonFormat(returnReversedDemoBookPage());
-        Map<String, Object> actual = bookPager.getPagedResponse();
-
-        Assert.assertEquals(expected.get("data").toString(), actual.get("data").toString());
-    }
-
     private void setUpRequestParams(String sortDirection){
         ArrayList<String> columnsToSearchIn = new ArrayList<>();
         columnsToSearchIn.add("");
+        System.out.println(sortDirection+" bo ");
         requestParams = new PagedRequest(
                 10, 0, "", sortDirection, "title", columnsToSearchIn
         );
@@ -139,12 +132,6 @@ class PagerTest {
 
     private Page<Book> returnDemoBookPage(){
         ArrayList<Book> bookList = returnDemoBooks();
-        return new PageImpl<>(bookList, returnPaging(), 4);
-    }
-
-    private Page<Book> returnReversedDemoBookPage(){
-        ArrayList<Book> bookList = returnDemoBooks();
-        Collections.reverse(bookList);
         return new PageImpl<>(bookList, returnPaging(), 4);
     }
 
