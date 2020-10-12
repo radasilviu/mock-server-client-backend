@@ -78,6 +78,7 @@ class PagerTest {
         Pageable actual = bookPager.getPagination();
 
         Assert.assertEquals((int)requestParams.getPageNumber(), actual.getPageNumber());
+        Assert.assertEquals("UNSORTED", actual.getSort().toString());
         Assert.assertNull(actual.getSort().getOrderFor("title"));
         Assert.assertEquals((int)requestParams.getOffset(), actual.getOffset());
     }
