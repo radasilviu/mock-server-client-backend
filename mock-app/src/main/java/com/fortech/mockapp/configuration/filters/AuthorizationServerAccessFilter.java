@@ -27,7 +27,7 @@ public class AuthorizationServerAccessFilter implements Filter {
         String authorizationHeader = httpServletRequest.getHeader(SecurityConstants.HEADER_AUTHORIZATION);
 
         String resource = httpServletRequest.getHeader(SecurityConstants.RESOURCE);
-        String requestType = httpServletRequest.getHeader(SecurityConstants.REQUESTTYPE);
+        String requestType = httpServletRequest.getHeader(SecurityConstants.REQUEST_TYPE);
         String method = httpServletRequest.getMethod();
         String authServerRootURL = this.env.getProperty("authServerRootURL");
 
@@ -36,7 +36,7 @@ public class AuthorizationServerAccessFilter implements Filter {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty(SecurityConstants.HEADER_AUTHORIZATION, authorizationHeader);
-            con.setRequestProperty(SecurityConstants.REQUESTTYPE,requestType);
+            con.setRequestProperty(SecurityConstants.REQUEST_TYPE,requestType);
             con.setRequestProperty(SecurityConstants.RESOURCE,resource);
 
             con.getInputStream();
