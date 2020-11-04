@@ -124,7 +124,6 @@ class PagerTest {
     private void setUpRequestParams(String sortDirection){
         ArrayList<String> columnsToSearchIn = new ArrayList<>();
         columnsToSearchIn.add("");
-        System.out.println(sortDirection+" bo ");
         requestParams = new PagedRequest(
                 10, 0, "", sortDirection, "title", columnsToSearchIn
         );
