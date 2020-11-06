@@ -26,8 +26,12 @@ public class AuthorizationServerAccessFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         String authorizationHeader = httpServletRequest.getHeader(SecurityConstants.HEADER_AUTHORIZATION);
 
-        String resource = httpServletRequest.getHeader(SecurityConstants.RESOURCE);
-        String requestType = httpServletRequest.getHeader(SecurityConstants.REQUEST_TYPE);
+        String path = httpServletRequest.getHeader("Referer");
+        String[] list = path.split("/", 4);
+
+        String resource = list[list.length - 1];
+        String requestType = httpServletRequest.getMethod();
+
         String method = httpServletRequest.getMethod();
         String authServerRootURL = this.env.getProperty("authServerRootURL");
 
@@ -36,8 +40,9 @@ public class AuthorizationServerAccessFilter implements Filter {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty(SecurityConstants.HEADER_AUTHORIZATION, authorizationHeader);
-            con.setRequestProperty(SecurityConstants.REQUEST_TYPE,requestType);
-            con.setRequestProperty(SecurityConstants.RESOURCE,resource);
+
+            con.setRequestProperty("Request_Type", requestType);
+            con.setRequestProperty("Resource", resource);
 
             con.getInputStream();
             con.disconnect();
